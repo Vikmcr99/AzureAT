@@ -1,0 +1,47 @@
+﻿<h6>Photos galery</h6>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>FileName</th>
+            <th>ModifiedOn</th>
+            <th>Download</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model)
+        {
+            <tr>
+
+                <td>@data.FileName
+                    @*<img src="@data"
+                         alt="image"
+                         width="100"
+                         height="100" />*@
+                </td>
+                <td>@data.ModifiedOn</td>
+                <td> <a href="/BlobServices/Download?blobName=@data.FileName">Download</a> </td>
+                <td> <a href="/BlobServices/Delete?blobName=@data.FileName">Delete</a> </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row">
+<div class="col-md-6">
+    <form method="post" enctype="multipart/form-data" asp-controller="BlobServices"
+          asp-action="Create">
+
+        <div class="form-group">
+
+            <label> Select File </label>
+            <input class="form-control" name="files" multiple="multiple" type="file" />
+        </div>
+
+        <div class="form-group">
+            <input class="btn btn-dark" type="submit" value="Submit" />
+        </div>
+
+    </form>
+</div>
+</div>
