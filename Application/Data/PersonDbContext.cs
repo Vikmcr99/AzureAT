@@ -15,6 +15,12 @@ namespace Application.Data
 
         public DbSet<Countries> Country { get; set; }
 
+        public DbSet<Friend> Friends { get; set; }
+
+        public DbSet<Friendship> Friendships { get; set; }
+
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
            
@@ -22,6 +28,24 @@ namespace Application.Data
            
         }
 
-        public DbSet<Application.Models.FileData> FileData { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+
+
+            builder.Entity<Friendship>()
+                .HasOne(p => p.Person)
+                .WithMany(f => f.Friendship_)
+                .HasForeignKey(pi => pi.Id);
+
+            builder.Entity<Friendship>()
+                .HasOne(fr => fr.Friend)
+                .WithMany(f => f.Friendship)
+                .HasForeignKey(fi => fi.FriendId);
+
+            base.OnModelCreating(builder);
+        }
+
+
+        
     }
 }

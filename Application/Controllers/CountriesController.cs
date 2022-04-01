@@ -22,8 +22,9 @@ namespace Application.Controllers
         }
 
         // GET: Countries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
+
             return View(await _context.Country.ToListAsync());
         }
 

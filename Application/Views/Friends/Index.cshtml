@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Application.Models.Friend>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="text-center">
+    <img src="https://fortissima.com.br/wp-content/uploads/2014/01/amigos-tt-width-300-height-300-bgcolor-FFFFFF.jpg" alt="logotipo" width=300 height=250>
+</div>
+
+
+<h2>Friends</h2>
+
+<p>
+    <a asp-action="Create">Add friend</a>
+</p>
+
+<h6>Friendship list</h6>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+
+
+                    <a asp-action="Delete" asp-route-id="@item.Id">Unfriend</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

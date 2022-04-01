@@ -4,14 +4,16 @@ using Application.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Application.Migrations
 {
     [DbContext(typeof(PersonDbContext))]
-    partial class PersonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220331213414_ManytoMany")]
+    partial class ManytoMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,12 +34,7 @@ namespace Application.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PersonId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
 
                     b.ToTable("Country");
                 });
@@ -106,13 +103,6 @@ namespace Application.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Persons");
-                });
-
-            modelBuilder.Entity("Application.Models.Countries", b =>
-                {
-                    b.HasOne("Application.Models.Person", null)
-                        .WithMany("Countries_")
-                        .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("Application.Models.Friendship", b =>

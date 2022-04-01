@@ -18,10 +18,14 @@ namespace Application.Models
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
-        public List<Person> FriendList { get; set; }
-
         public string Country { get; set; }
 
         public string Photo { get; set; }
+
+        //many to many
+        public List<Friendship> Friendship_ { get; set; }
+
+        //one to many
+        public List<Countries> Countries_ { get; set; }
     }
 }
