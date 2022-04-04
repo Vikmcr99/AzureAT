@@ -12,6 +12,5 @@ namespace Application.Models
         public string Name { get; set; }
 
         public string FlagPhoto { get; set; }
-
     }
 }

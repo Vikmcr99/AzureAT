@@ -36,27 +36,11 @@ namespace Application.Controllers
             string connectionString = "Server=tcp:vikserver.database.windows.net,1433;Initial Catalog=vikdatabase;Persist Security Info=False;User ID=vikmcr;Password=*Fluzudo12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             SqlConnection connection = new SqlConnection(connectionString);
 
-            try
-            {
-                connection.Open();
-                string consult = "GetFriend";
-                SqlCommand cmd = new SqlCommand(consult, connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Name", search);
-                cmd.ExecuteNonQuery();
-            }
-            
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var Friendlist = new List<Person>();
 
-            finally
-            {
-                connection.Close();
-            }
+            Friendlist = _context.Persons.FromSqlRaw($"EXEC GetFriend {search}").ToList();
 
-            return View(await _context.Persons.ToListAsync());
+            return View(Friendlist);
         }
 
         [HttpGet("{id}")]

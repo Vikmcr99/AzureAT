@@ -24,7 +24,6 @@ namespace Application.Controllers
         // GET: Countries
         public async Task<IActionResult> Index(string search)
         {
-
             return View(await _context.Country.ToListAsync());
         }
 
@@ -37,30 +36,11 @@ namespace Application.Controllers
             string connectionString = "Server=tcp:vikserver.database.windows.net,1433;Initial Catalog=vikdatabase;Persist Security Info=False;User ID=vikmcr;Password=*Fluzudo12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             SqlConnection connection = new SqlConnection(connectionString);
 
-            var context = _context.Country;
+            var countrieslist = new List<Countries>();
 
-            try
-            {
-                connection.Open();
-                string consult = "GetCountry";
-                SqlCommand cmd = new SqlCommand(consult, connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Name", search);
-                cmd.ExecuteNonQuery();
-                
-            }
+            countrieslist = _context.Country.FromSqlRaw($"EXEC GetCountry {search}").ToList();
 
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            finally
-            {
-                connection.Close();
-            }
-
-            return View(await context.ToListAsync());
+            return View(countrieslist);
         }
 
 

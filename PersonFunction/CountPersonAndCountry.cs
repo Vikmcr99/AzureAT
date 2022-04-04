@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using Application.Data;
 using System.Collections.Generic;
 using Application.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace PersonFunction
 {
@@ -23,7 +25,7 @@ namespace PersonFunction
         }
 
         [FunctionName("CountPersonAndCountry")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
@@ -35,19 +37,18 @@ namespace PersonFunction
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
 
-            var person = new List<Person>();
+            var countList = new List<Countries>();
 
-            var country = new List<Countries>();
+            countList = _context.Country.FromSqlRaw($"EXEC CountCountry").ToList();
 
+            var personList = new List<Person>();
 
-            //person = _context.Friends.FromSqlRaw("EXEC CountPerson").ToList();
-
-            //country = _context.Country.FromSqlRaw("EXEC CountCountry").ToList();
-
+           personList = _context.Persons.FromSqlRaw($"EXEC CountPerson").ToList();
 
 
-            string responseMessage = $"The number of friends are " +
-                $" || The number of countries are ";
+
+            string responseMessage = $"The number of friends are {countList}" +
+                $" || The number of countries are {personList}";
 
 
             return new OkObjectResult(responseMessage);
