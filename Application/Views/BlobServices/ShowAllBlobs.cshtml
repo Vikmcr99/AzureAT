@@ -1,4 +1,5 @@
-﻿<h6>Photos galery</h6>
+﻿
+<h6>Blob galery</h6>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -28,20 +29,22 @@
 </table>
 
 <div class="row">
-<div class="col-md-6">
-    <form method="post" enctype="multipart/form-data" asp-controller="BlobServices"
-          asp-action="Create">
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data" asp-controller="BlobServices"
+              asp-action="Create">
 
-        <div class="form-group">
+            <div class="form-group">
 
-            <label> Select File </label>
-            <input class="form-control" name="files" multiple="multiple" type="file" />
-        </div>
+                <label> Select File </label>
+                <input class="form-control" name="files" multiple="multiple" type="file" />
+            </div>
 
-        <div class="form-group">
-            <input class="btn btn-dark" type="submit" value="Submit" />
-        </div>
+            <div class="form-group">
+                <input class="btn btn-dark" type="submit" value="Submit" />
+            </div>
 
-    </form>
+        </form>
+    </div>
 </div>
-</div>
+
+

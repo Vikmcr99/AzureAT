@@ -9,6 +9,8 @@ using Application.Data;
 using Application.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage;
 
 namespace Application.Controllers
 {
@@ -29,7 +31,7 @@ namespace Application.Controllers
 
         #region GETFriends
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> Getfriends(string search)
+        public ActionResult<IEnumerable<Person>> Getfriends(string search)
         {
             ViewData["SearchFilter"] = search;
 
@@ -87,8 +89,9 @@ namespace Application.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Person person)
+        public async Task<IActionResult> Create(Person person)
         {
+            var image = UploadImage(person.Image);
             string connectionString = "Server=tcp:vikserver.database.windows.net,1433;Initial Catalog=vikdatabase;Persist Security Info=False;User ID=vikmcr;Password=*Fluzudo12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             SqlConnection connection = new SqlConnection(connectionString);
             try
@@ -103,7 +106,7 @@ namespace Application.Controllers
                 cmd.Parameters.AddWithValue("@Email", person.Email);
                 cmd.Parameters.AddWithValue("@Birthday", person.Birthday);
                 cmd.Parameters.AddWithValue("@Country", person.Country);
-                cmd.Parameters.AddWithValue("@Photo", person.Photo);
+                cmd.Parameters.AddWithValue("@Photo", await image);
                 cmd.ExecuteNonQuery();
 
             }
@@ -170,6 +173,7 @@ namespace Application.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Person person)
         {
+
             string connectionString = "Server=tcp:vikserver.database.windows.net,1433;Initial Catalog=vikdatabase;Persist Security Info=False;User ID=vikmcr;Password=*Fluzudo12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             SqlConnection connection = new SqlConnection(connectionString);
             try
@@ -250,6 +254,23 @@ namespace Application.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
+
+        #region UploadImage
+        public async Task<string> UploadImage(IFormFile image)
+        {
+
+            var reader = image.OpenReadStream();
+            var cloundStorageAccount = CloudStorageAccount.Parse(@"DefaultEndpointsProtocol=https;AccountName=storagevik;AccountKey=rD9uWpP2+78SFAPxhb7ehVFD5tQq4XjeJGKYz1LAuVAxONMF9x+wewbBWoAo2Lr9vN01LNSNWSkW+ASt/h8Kgg==;EndpointSuffix=core.windows.net");
+            var blobClient = cloundStorageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference("cafecontainer");
+            await container.CreateIfNotExistsAsync();
+            var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
+            await blob.UploadFromStreamAsync(reader);
+            var uri = blob.Uri.ToString();
+            return uri;
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,5 +12,7 @@ namespace Application.Models
         public string FileName { get; set; }
         public string FileSize { get; set; }
         public string ModifiedOn { get; set; }
+        
+        public IFormFile Image { get; set; }
     }
 }
